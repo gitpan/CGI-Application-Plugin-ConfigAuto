@@ -1,0 +1,18 @@
+Revision history for Perl extension CGI::Application::Plugin::ConfigAuto
+
+1.00
+    - First release on CPAN.
+    - Documentation patch (William McKee)
+
+0.21 Mon Sep  6 18:03:23 EST 2004
+    - Added missing t/basic_config.pl to distribution (William McKee)
+
+0.20 Mon Sep  6 16:24:23 EST 2004
+    - Add support for return config info as a hashref (William McKee)
+
+0.10 Mon Sep  6 12:11:08 EST 2004
+    - added cfg_file(), a simpler syntax for providing config file names.
+
+0.02 Sun Sep  5 18:47:48 EST 2004
+	- initial release
+
