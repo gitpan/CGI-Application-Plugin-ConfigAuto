@@ -1,16 +1,17 @@
 --- #YAML:1.0
 name: CGI-Application-Plugin-ConfigAuto
-version: 1.00
+version: 1.10
+author:
+  - Mark Stosberg <mark@summersault.com>
+abstract: |-
+  Plugin that adds Config::Auto support to CGI::Application
 license: perl
-distribution_type: module
 requires:
   CGI::Application: 0
+  Carp: 0
   Config::Auto: 0
-recommends: {}
-build_requires: {}
-conflicts: {}
 provides:
   CGI::Application::Plugin::ConfigAuto:
     file: lib/CGI/Application/Plugin/ConfigAuto.pm
-    version: 1.00
-generated_by: Module::Build version 0.21
+    version: 1.10
+generated_by: Module::Build version 0.2606

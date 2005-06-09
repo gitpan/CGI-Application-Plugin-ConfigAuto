@@ -1,5 +1,5 @@
 package CGI::Application::Plugin::ConfigAuto;
-
+use Carp;
 use strict;
 use vars qw($VERSION @ISA  @EXPORT_OK);
 require Exporter;
@@ -13,7 +13,7 @@ require Exporter;
     cfg
 );
 
-$VERSION = '1.00';
+$VERSION = '1.10';
 
 =pod 
 
@@ -25,10 +25,13 @@ CGI::Application::Plugin::ConfigAuto - Easy config file management for CGI::Appl
 
  use CGI::Application::Plugin::ConfigAuto (qw/cfg cfg_file/);
 
- # In your instance script
+In your instance script:
+
  my $app = WebApp->new();
  $app->cfg_file('../../config/config.pl');
  $app->run();
+
+In your application module:
 
  sub my_run_mode {
     my $self = shift;
@@ -110,16 +113,26 @@ In scalar context, it returns the configuration data as a hashref.
 sub cfg {
     my $self = shift;
 
-    die "must call cfg_files() before calling cfg()." unless $self->{__CFG_FILES};
+    croak "must call cfg_files() before calling cfg()." unless $self->{__CFG_FILES};
 
     if (!$self->{__CFG}) {
         require Config::Auto;
         # Read in config files in the order the appear in this array.
         my %combined_cfg;
-        for my $file (@{ $self->{__CFG_FILES} }) {
-            my $cfg = Config::Auto::parse($file);
+        for (my $i = 0; $i < scalar @{ $self->{__CFG_FILES} }; $i++) {
+            my $file = $self->{__CFG_FILES}[$i];
+            my %parms;
+            if (ref $self->{__CFG_FILES}[$i+1] eq 'HASH') {
+                %parms = %{ $self->{__CFG_FILES}[$i+1] };
+                # skip trying to process the hashref as a file name
+                $i++;
+            }
+            my $cfg = Config::Auto::parse($file, %parms);
             %combined_cfg = (%combined_cfg, %$cfg);
         }
+        die "No configuration found. Check your config file(s) (check the syntax if this is a perl format)." 
+            unless keys %combined_cfg;
+
         $self->{__CFG} = \%combined_cfg;
     }
 
@@ -131,31 +144,26 @@ sub cfg {
     }
 }
 
+=head2 cfg_file()
+
+ # Usual
+ $self->cfg_file('my_config_file.pl');
+    
+ # Supply the first format, guess the second
+ $self->cfg_file('my_config_file.pl',{ format => 'perl' } );
+
+Supply an array of config files, and they will be processed in order.  If a
+hash reference if found it, will be used to supply the format for the previous
+file in the array.
+
+=cut
+
 sub cfg_file {
     my $self = shift;
     my @cfg_files = @_;
-    unless (scalar @cfg_files) { die "cfg_file: must have at least one config file." }
+    unless (scalar @cfg_files) { croak "cfg_file: must have at least one config file." }
     $self->{__CFG_FILES} = \@cfg_files;
 }
-
-# =head2 init_cfg()
-# 
-#  # In your instance script
-#  my $app = WebApp->new(
-#  	PARAMS => {
-#  		# Read in the config files, in the order they appear in this array. 
-#  		config_files => ['../../config/config.pl'],
-#  	}
-#  );
-# 
-#  sub cgiapp_init  {
-#     my $self = shift;
-# 
-#     $self->init_cfg;
-# 
-#  }
-
-
 
 1;
 __END__
@@ -180,12 +188,6 @@ hash reference.
     $CFG{URL} = 'http://mark.stosberg.com/';
 
     \%CFG;
-
-=head1 LIMITATIONS
-
-Currently there is not a way to specify explicity what format your config file
-is, which means we rely on L<Config::Auto> to guess it correctly. This feature
-may be added in the future in a backwards compatible way. 
 
 =head1 SEE ALSO
 

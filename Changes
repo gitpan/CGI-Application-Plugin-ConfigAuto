@@ -1,5 +1,11 @@
 Revision history for Perl extension CGI::Application::Plugin::ConfigAuto
 
+1.10
+    - Make death messages more useful by 'croaking' instead of die'ing
+    - Docs clarified (Dan Horne)
+    - die if no valid configuration is found. (William McKee)
+    - Explicit file format can now be provided for files.
+
 1.00
     - First release on CPAN.
     - Documentation patch (William McKee)

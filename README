@@ -5,10 +5,13 @@ NAME
 SYNOPSIS
      use CGI::Application::Plugin::ConfigAuto (qw/cfg cfg_file/);
 
-     # In your instance script
+    In your instance script:
+
      my $app = WebApp->new();
      $app->cfg_file('../../config/config.pl');
      $app->run();
+
+    In your application module:
 
      sub my_run_mode {
         my $self = shift;
@@ -80,6 +83,17 @@ METHODS
     In list context, it returns the configuration data as a hash. In scalar
     context, it returns the configuration data as a hashref.
 
+  cfg_file()
+     # Usual
+     $self->cfg_file('my_config_file.pl');
+    
+     # Supply the first format, guess the second
+     $self->cfg_file('my_config_file.pl',{ format => 'perl' } );
+
+    Supply an array of config files, and they will be processed in order. If
+    a hash reference if found it, will be used to supply the format for the
+    previous file in the array.
+
 FILE FORMAT HINTS
   Perl
     Here's a simple example of my favorite config file format: Perl. Having
@@ -96,12 +110,6 @@ FILE FORMAT HINTS
         $CFG{URL} = 'http://mark.stosberg.com/';
 
         \%CFG;
-
-LIMITATIONS
-    Currently there is not a way to specify explicity what format your
-    config file is, which means we rely on Config::Auto to guess it
-    correctly. This feature may be added in the future in a backwards
-    compatible way.
 
 SEE ALSO
     CGI::Application CGI::Application::Plugin::ValidateRM

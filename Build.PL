@@ -5,7 +5,8 @@ Module::Build->new(
     license => 'perl',
     requires => {
         'CGI::Application' => 0,
-        'Config::Auto'              => 0,
+        'Config::Auto'     => 0,
+        'Carp'             => 0,
     },
     create_makefile_pl => 'traditional',
     create_readme => 1,
