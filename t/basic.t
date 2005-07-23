@@ -23,6 +23,23 @@ is($href->{test_key_2},22,'cfg(), returning hashref');
 
 is($t1_obj->cfg->{test_key_2},22,'cfg(), accessing hash key directly via hashref');
 
+{
+    my $a = TestAppBasic->new( PARAMS => { cfg_file => 't/basic_config.pl' } );
+    is($a->cfg('test_key_1'),11,'cfg_file param with scalar');
+}
+{
+    my $a = TestAppBasic->new( PARAMS => { cfg_file => ['t/basic_config.pl'] } );
+    is($a->cfg('test_key_1'),11,'cfg_file param with arrayref');
+}
+{
+    my $a = TestAppBasic->new( PARAMS => { config_files => 't/basic_config.pl' } );
+    is($a->cfg('test_key_1'),11,'config_files param with scalar');
+}
+{
+    my $a = TestAppBasic->new( PARAMS => { config_files => ['t/basic_config.pl'] } );
+    is($a->cfg('test_key_1'),11,'config_files param with arrayref');
+}
+
 ###
 
 my $t2_obj = TestAppBasic->new();

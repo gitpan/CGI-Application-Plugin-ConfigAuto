@@ -1,5 +1,9 @@
 Revision history for Perl extension CGI::Application::Plugin::ConfigAuto
 
+1.20 Sat Jul 23 18:37:14 EST 2005
+
+    - Update recommended usage syntax.
+
 1.10
     - Make death messages more useful by 'croaking' instead of die'ing
     - Docs clarified (Dan Horne)

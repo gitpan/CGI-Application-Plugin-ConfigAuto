@@ -8,12 +8,11 @@ require Exporter;
 # names by default without a very good reason. Use EXPORT_OK instead.
 # Do not simply export all your public functions/methods/constants.
 @EXPORT_OK = qw(
-    init_cfg
     cfg_file
     cfg
 );
 
-$VERSION = '1.10';
+$VERSION = '1.20';
 
 =pod 
 
@@ -23,12 +22,11 @@ CGI::Application::Plugin::ConfigAuto - Easy config file management for CGI::Appl
 
 =head1 SYNOPSIS
 
- use CGI::Application::Plugin::ConfigAuto (qw/cfg cfg_file/);
+ use CGI::Application::Plugin::ConfigAuto (qw/cfg/);
 
 In your instance script:
 
- my $app = WebApp->new();
- $app->cfg_file('../../config/config.pl');
+ my $app = WebApp->new(PARAMS => { cfg_file => 'config.pl' });
  $app->run();
 
 In your application module:
@@ -50,8 +48,7 @@ In your application module:
 CGI::Application::Plugin::ConfigAuto adds easy access to config file variables
 to your L<CGI::Application|CGI::Application> modules.  Lazy loading is used to
 prevent the config file from being parsed if no configuration variables are
-accessed during the request.  In other words, the config file is not parsed
-until it is actually needed. The L<Config::Auto|Config::Auto> package provides
+accessed during the request. The L<Config::Auto|Config::Auto> package provides
 the framework for this plugin.
 
 =head1 RATIONALE
@@ -65,7 +62,6 @@ config files to override each other in a particular order. This covers even
 complex cases, where you have a global config file, and second local config
 file which overrides a few variables.
 
-This plugin can be called in either the instance script or the setup method.
 It is recommended that you to declare your config file locations in the
 instance scripts, where it will have minimum impact on your application. This
 technique is ideal when you intend to reuse your module to support multiple
@@ -73,20 +69,27 @@ configuration files. If you have an application with multiple instance scripts
 which share a single config file, you may prefer to call the plugin from the
 setup() method.
 
-
-
 =head1 DECLARING CONFIG FILE LOCATIONS
 
  # In your instance script
- my $app = WebApp->new();
+ # value can also be an arrayref of config files
+ my $app = WebApp->new(PARAMS => { cfg_file => 'config.pl' })
+
+ # OR ... 
 
  # Pass in an array of config files, and they will be processed in order.  
  $app->cfg_file('../../config/config.pl');
 
-Your config files should be referenced using the syntax example above. The format 
-is detected automatically using L<Config::Auto|Config::Auto>. It it known to support
-the following formats: colon separated, space separated, equals separated, XML,
-Perl code, and Windows INI. See that modules documentation for complete details. 
+Your config files should be referenced using the syntax example above. Note
+that the key C<config_files> can be used as alternative to cfg_file.
+
+
+
+
+The format is detected automatically using L<Config::Auto|Config::Auto>. It it
+known to support the following formats: colon separated, space separated,
+equals separated, XML, Perl code, and Windows INI. See that modules
+documentation for complete details. 
 
 =head1 METHODS
 
@@ -113,10 +116,23 @@ In scalar context, it returns the configuration data as a hashref.
 sub cfg {
     my $self = shift;
 
-    croak "must call cfg_files() before calling cfg()." unless $self->{__CFG_FILES};
-
     if (!$self->{__CFG}) {
         require Config::Auto;
+
+         unless ($self->{__CFG_FILES}) {
+             my @all_cfg_files;
+             for my $key (qw/cfg_file config_files/) {
+                 my $cfg_file = $self->param($key);
+                 if (defined $cfg_file) {
+                     push @all_cfg_files, @$cfg_file  if (ref $cfg_file eq 'ARRAY');
+                     push @all_cfg_files,  $cfg_file  if (ref \$cfg_file eq 'SCALAR');
+                 }
+             }
+ 
+             # Non-standard call syntax for mix-in happiness.
+             cfg_file($self,@all_cfg_files);
+         }
+
         # Read in config files in the order the appear in this array.
         my %combined_cfg;
         for (my $i = 0; $i < scalar @{ $self->{__CFG_FILES} }; $i++) {
