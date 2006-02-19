@@ -27,8 +27,9 @@ DESCRIPTION
     CGI::Application::Plugin::ConfigAuto adds easy access to config file
     variables to your CGI::Application modules. Lazy loading is used to
     prevent the config file from being parsed if no configuration variables
-    are accessed during the request. The Config::Auto package provides the
-    framework for this plugin.
+    are accessed during the request. In other words, the config file is not
+    parsed until it is actually needed. The Config::Auto package provides
+    the framework for this plugin.
 
 RATIONALE
     "CGI::Application" promotes re-usable applications by moving a maximal
@@ -85,6 +86,16 @@ METHODS
     In list context, it returns the configuration data as a hash. In scalar
     context, it returns the configuration data as a hashref.
 
+  config()
+    config() is provided as an alias to cfg() for compliance with
+    CGI::Application::Standard::Config. It always exported by default per
+    the standard.
+
+  std_config()
+    std_config() is implemented to comply with
+    CGI::Application::Standard::Config. It's for developers. Users can
+    ignore it.
+
   cfg_file()
      # Usual
      $self->cfg_file('my_config_file.pl');
@@ -115,7 +126,8 @@ FILE FORMAT HINTS
 
 SEE ALSO
     CGI::Application CGI::Application::Plugin::ValidateRM
-    CGI::Application::Plugin::DBH perl(1)
+    CGI::Application::Plugin::DBH CGI::Application::Standard::Config.
+    perl(1)
 
 AUTHOR
     Mark Stosberg <mark@summersault.com>

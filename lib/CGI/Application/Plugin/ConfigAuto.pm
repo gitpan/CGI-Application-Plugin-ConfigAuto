@@ -1,18 +1,33 @@
 package CGI::Application::Plugin::ConfigAuto;
 use Carp;
 use strict;
-use vars qw($VERSION @ISA  @EXPORT_OK);
+use vars qw($VERSION @ISA  @EXPORT_OK @EXPORT);
 require Exporter;
 @ISA = qw(Exporter);
-# Items to export into callers namespace by default. Note: do not export
-# names by default without a very good reason. Use EXPORT_OK instead.
-# Do not simply export all your public functions/methods/constants.
+
 @EXPORT_OK = qw(
     cfg_file
     cfg
 );
 
-$VERSION = '1.20';
+# For compliance with CGI::App::Standard::Config
+# we break the rule and export config and std_config by default. 
+sub import {
+  my $app = caller;
+  no strict 'refs';
+  my $full_name = $app . '::config';
+  *$full_name = \&cfg;
+
+  my $std_config_name = $app.'::std_config'; 
+  *$std_config_name = \&std_config;
+  CGI::Application::Plugin::ConfigAuto->export_to_level(1,@_);
+}
+
+
+$VERSION = '1.30';
+
+# required by C::A::Standard::Config;
+sub std_config { return 1; }
 
 =pod 
 
@@ -48,7 +63,8 @@ In your application module:
 CGI::Application::Plugin::ConfigAuto adds easy access to config file variables
 to your L<CGI::Application|CGI::Application> modules.  Lazy loading is used to
 prevent the config file from being parsed if no configuration variables are
-accessed during the request. The L<Config::Auto|Config::Auto> package provides
+accessed during the request.  In other words, the config file is not parsed
+until it is actually needed. The L<Config::Auto|Config::Auto> package provides
 the framework for this plugin.
 
 =head1 RATIONALE
@@ -110,6 +126,17 @@ Subsequent calls will use this version, rather than re-reading the file.
 
 In list context, it returns the configuration data as a hash.
 In scalar context, it returns the configuration data as a hashref.
+
+=head2 config()
+
+L<config()> is provided as an alias to cfg() for compliance with
+L<CGI::Application::Standard::Config>. It always exported by default per the
+standard.
+
+=head2 std_config()
+
+L<std_config()> is implemented to comply with L<CGI::Application::Standard::Config>. It's
+for developers. Users can ignore it. 
 
 =cut
 
@@ -181,6 +208,7 @@ sub cfg_file {
     $self->{__CFG_FILES} = \@cfg_files;
 }
 
+
 1;
 __END__
 
@@ -210,6 +238,7 @@ hash reference.
 L<CGI::Application|CGI::Application> 
 L<CGI::Application::Plugin::ValidateRM|CGI::Application::Plugin::ValidateRM>
 L<CGI::Application::Plugin::DBH|CGI::Application::Plugin::DBH>
+L<CGI::Application::Standard::Config|CGI::Application::Standard::Config>.
 perl(1)
 
 =head1 AUTHOR
