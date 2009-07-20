@@ -24,7 +24,7 @@ sub import {
 }
 
 
-$VERSION = '1.30';
+$VERSION = '1.31';
 
 # required by C::A::Standard::Config;
 sub std_config { return 1; }
@@ -129,13 +129,13 @@ In scalar context, it returns the configuration data as a hashref.
 
 =head2 config()
 
-L<config()> is provided as an alias to cfg() for compliance with
+L<CGI::Application::Standard::Config/config()> is provided as an alias to cfg() for compliance with
 L<CGI::Application::Standard::Config>. It always exported by default per the
 standard.
 
 =head2 std_config()
 
-L<std_config()> is implemented to comply with L<CGI::Application::Standard::Config>. It's
+L<CGI::Application::Standard::Config/std_config()> is implemented to comply with L<CGI::Application::Standard::Config>. It's
 for developers. Users can ignore it. 
 
 =cut

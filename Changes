@@ -1,5 +1,9 @@
 Revision history for Perl extension CGI::Application::Plugin::ConfigAuto
 
+1.31 Mon Jul 20 15:27:42 EDT 2009
+   [DOCUMENTATION]
+   - Fix a couple of broken documentation links (Lyle Hopkins)
+
 1.30 Sat Feb 18 23:35:44 EST 2006
 
    - comply with CGI::Application::Config::Standard 1.0. (Mark Stosberg)

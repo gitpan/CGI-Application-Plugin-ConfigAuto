@@ -87,14 +87,14 @@ METHODS
     context, it returns the configuration data as a hashref.
 
   config()
-    config() is provided as an alias to cfg() for compliance with
-    CGI::Application::Standard::Config. It always exported by default per
-    the standard.
+    "config()" in CGI::Application::Standard::Config is provided as an alias
+    to cfg() for compliance with CGI::Application::Standard::Config. It
+    always exported by default per the standard.
 
   std_config()
-    std_config() is implemented to comply with
-    CGI::Application::Standard::Config. It's for developers. Users can
-    ignore it.
+    "std_config()" in CGI::Application::Standard::Config is implemented to
+    comply with CGI::Application::Standard::Config. It's for developers.
+    Users can ignore it.
 
   cfg_file()
      # Usual
