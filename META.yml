@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: CGI-Application-Plugin-ConfigAuto
-version: 1.31
+version: 1.32
 author:
   - Mark Stosberg <mark@summersault.com>
 abstract: |-
@@ -13,5 +13,5 @@ requires:
 provides:
   CGI::Application::Plugin::ConfigAuto:
     file: lib/CGI/Application/Plugin/ConfigAuto.pm
-    version: 1.31
+    version: 1.32
 generated_by: Module::Build version 0.2611

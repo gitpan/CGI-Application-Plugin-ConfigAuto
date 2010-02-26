@@ -24,7 +24,7 @@ sub import {
 }
 
 
-$VERSION = '1.31';
+$VERSION = '1.32';
 
 # required by C::A::Standard::Config;
 sub std_config { return 1; }
