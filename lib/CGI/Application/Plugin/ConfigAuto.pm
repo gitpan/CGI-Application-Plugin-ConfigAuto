@@ -1,11 +1,9 @@
 package CGI::Application::Plugin::ConfigAuto;
+use base 'Exporter';
 use Carp;
 use strict;
-use vars qw($VERSION @ISA  @EXPORT_OK @EXPORT);
-require Exporter;
-@ISA = qw(Exporter);
 
-@EXPORT_OK = qw(
+our @EXPORT_OK = qw(
     cfg_file
     cfg
 );
@@ -24,7 +22,7 @@ sub import {
 }
 
 
-$VERSION = '1.32';
+our $VERSION = '1.33';
 
 # required by C::A::Standard::Config;
 sub std_config { return 1; }
@@ -225,6 +223,8 @@ hash reference.
 
     #!/usr/bin/perl
 
+    my %CFG = ();
+
     # directory path name
     $CFG{DIR} = '/home/mark/www';
 
@@ -243,11 +243,11 @@ perl(1)
 
 =head1 AUTHOR
 
-Mark Stosberg <mark@summersault.com>
+Mark Stosberg C<< mark@summersault.com >>
 
 =head1 LICENSE
 
-Copyright (C) 2004 Mark Stosberg <mark@summersault.com>
+Copyright (C) 2004 - 2011 Mark Stosberg C<< mark@summersault.com >>
 
 This library is free software. You can modify and or distribute it under the same terms as Perl itself.
 

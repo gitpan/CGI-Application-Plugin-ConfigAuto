@@ -116,6 +116,8 @@ FILE FORMAT HINTS
 
         #!/usr/bin/perl
 
+        my %CFG = ();
+
         # directory path name
         $CFG{DIR} = '/home/mark/www';
 
@@ -130,10 +132,10 @@ SEE ALSO
     perl(1)
 
 AUTHOR
-    Mark Stosberg <mark@summersault.com>
+    Mark Stosberg "mark@summersault.com"
 
 LICENSE
-    Copyright (C) 2004 Mark Stosberg <mark@summersault.com>
+    Copyright (C) 2004 - 2011 Mark Stosberg "mark@summersault.com"
 
     This library is free software. You can modify and or distribute it under
     the same terms as Perl itself.
